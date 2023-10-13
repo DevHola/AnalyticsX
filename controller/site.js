@@ -78,8 +78,8 @@ const verificationkeyfile = async (req, res, next) => {
         })
       } else {
         res.setHeader('Content-Type', 'text/html')
-        res.setHeader('Content-Disposition', 'attachment; filename=verification-file.html')
-        res.status(200).sendFile(verificationfilepath)
+        res.setHeader('Content-Disposition', 'attachment; filename="verification-file.html"')
+        res.sendFile(verificationfilepath)
       }
     })
   } catch (error) {
