@@ -1,5 +1,6 @@
 (async function () {
-  const trackingendpoint = 'http://localhost:7000/api/Pageview/Track'
+  const trackingserver = 'http://localhost:7000/'
+  const trackingendpoint = `${trackingserver}api/Pageview/Track`
   const siteid = document.currentScript.getAttribute('data-siteid')
   // user ip address
   const response = await fetch('https://api.ipify.org?format=json')
@@ -8,7 +9,6 @@
   // const locationData = await locationResponse.json();
   // console.log(locationData)
   const isSessionStorageSupported = typeof Storage !== 'undefined'
-
   let sessionData
   if (isSessionStorageSupported && sessionStorage.getItem('sessionData')) {
     sessionData = JSON.parse(sessionStorage.getItem('sessionData'))
@@ -129,7 +129,7 @@
   }
 
   async function checker () {
-    const check = await axios.get(`http://localhost:7000/api/Pageview/checksid/${sessionData.sessionId}`)
+    const check = await axios.get(`${trackingserver}api/Pageview/checksid/${sessionData.sessionId}`)
     return check.data
   }
 
@@ -147,7 +147,7 @@
         screenHeight: window.innerHeight,
         language: navigator.language,
         browser: getBrowserInfo(),
-	  ip,
+        ip,
         sessionId: sessionData.sessionId,
         trafficSource: getTrafficSource(),
         sessionStartTime: sessionData.startTime,
@@ -161,16 +161,16 @@
         headers: { 'Content-Type': 'application/json' }
       })
     }
-    const responder = await axios.get(`http://localhost:7000/api/Pageview/sid/${sessionData.sessionId}`)
+    const responder = await axios.get(`${trackingserver}api/Pageview/sid/${sessionData.sessionId}`)
     const encodedIdValue = encodeURIComponent(window.location.pathname)
-    const avdr = await axios.get(`http://localhost:7000/api/Pagedetail/checkpsp/${responder.data.data._id}/${sessionData.sessionId}/${encodedIdValue}`)
+    const avdr = await axios.get(`${trackingserver}api/Pagedetail/checkpsp/${responder.data.data._id}/${sessionData.sessionId}/${encodedIdValue}`)
     if (avdr.data.message !== 'Exist') {
       const newdata = {
         pageview: responder.data.data._id,
         sessionid: sessionData.sessionId,
         page: window.location.pathname
-	   }
-      const pagedetail = await axios.post('http://localhost:7000/api/Pagedetail/Track', newdata, {
+      }
+      const pagedetail = await axios.post(`${trackingserver}api/Pagedetail/Track`, newdata, {
         headers: { 'Content-Type': 'application/json' }
       })
     }
@@ -181,7 +181,7 @@
     const timespent = Math.floor((currentTime - pageLoadTime) / 1000)
     const spd = Math.floor((currentTime - pageLoadTime) / 1000)
     const encodedIdValue = encodeURIComponent(window.location.pathname)
-    const responder = await axios.get(`http://localhost:7000/api/Pageview/sid/${sessionData.sessionId}`)
+    const responder = await axios.get(`${trackingserver}api/Pageview/sid/${sessionData.sessionId}`)
     const adddata = {
       pageview: responder.data.data._id,
       sessionId: sessionData.sessionId,
@@ -190,11 +190,111 @@
       timeOnPage: timespent
     }
     console.log(adddata)
-    const end = await axios.put('http://localhost:7000/api/Pagedetail/updateping/', adddata, {
+    const end = await axios.put(`${trackingserver}api/Pagedetail/updateping/`, adddata, {
       headers: { 'Content-Type': 'application/json' }
     })
     console.log(end)
   }
+
+  function trackEvent (eventType, trackingCode, additionalInfo) {
+  // Create tracking data for the event
+    const eventData = {
+      type: eventType,
+      Tc: trackingCode,
+      userAgent: navigator,
+      additionalInfo: additionalInfo || null,
+      ipAddress: ip,
+      sessionId: sessionData.sessionId
+    }
+    console.log(eventData)
+    // Send the eventData to your analytics server using Axios or another method
+    // You can use trackingEndpoint to specify the server endpoint
+    /*  axios.post(trackingEndpoint, eventData, {
+    headers: { 'Content-Type': 'application/json' },
+  }); */
+  }
+
+  document.addEventListener('click', function (event) {
+    const button = event.target
+    if (button.tagName === 'BUTTON' && button.getAttribute('data-event-button-tracking-code')) {
+      const eventType = 'button-click' // You can set a common event type
+      const trackingCode = button.getAttribute('data-event-button-tracking-code')
+
+      // Now, you have eventType and trackingCode to send to your tracking module
+      trackEvent(eventType, trackingCode)
+    }
+  })
+  document.addEventListener('click', function (event) {
+    // event.preventDefault()
+	 const a = event.target
+	 if (a.tagName === 'A' && a.getAttribute('data-event-link-tracking-code')) {
+		 const eventType = 'Link-click'
+		 const trackingCode = a.getAttribute('data-event-link-tracking-code')
+		 trackEvent(eventType, trackingCode, null)
+	 }
+  })
+  document.addEventListener('submit', function (event) {
+	 event.preventDefault()
+	 const form = event.target
+	 // console.log(eventData)
+	 if (form.tagName === 'FORM' && form.getAttribute('data-event-form-tracking-code')) {
+		 const formData = new FormData(form)
+      const eventData = {
+		  formFields: {}
+      }
+
+      formData.forEach((value, key) => {
+		  eventData.formFields[key] = value
+      })
+		 const eventType = 'form-submittion'
+		 const trackingCode = form.getAttribute('data-event-form-tracking-code')
+		 trackEvent(eventType, trackingCode, eventData.formFields)
+	 }
+  })
+  // Tracking Download Links
+  document.addEventListener('click', function (event) {
+	 const clickdownloadlink = event.target
+	 if (clickdownloadlink.tagName === 'A' && clickdownloadlink.getAttribute('data-event-download-tracking-code')) {
+		 const eventType = 'Download'
+		 const trackingCode = clickdownloadlink.getAttribute('data-event-download-tracking-code')
+		 const filename = clickdownloadlink.getAttribute('data-download-file-desc')
+		 const data = {
+			 desc: filename
+		 }
+		 trackEvent(eventType, trackingCode, data)
+	 }
+  })
+  // Tracking Search
+  // search without submit button we track input the input has to have id = searchInput
+  // Get all input elements with the 'data-event-search-tracking-code' attribute
+  const searchInputs = document.querySelectorAll('input[data-event-search-tracking-code]')
+
+  // Add an input event listener to each search input
+  searchInputs.forEach(function (inputElement) {
+    inputElement.addEventListener('input', function (event) {
+      const searchQuery = inputElement.value
+      const eventType = 'search'
+      const trackingCode = inputElement.getAttribute('data-event-search-tracking-code')
+
+      // Include the search query in the event data
+      trackEvent(eventType, trackingCode, { query: searchQuery })
+    })
+  })
+
+  // search with button
+  document.addEventListener('submit', function (event) {
+    const form = event.target
+
+    if (form.tagName === 'FORM' && form.hasAttribute('data-event-search-tracking-code')) {
+      const eventType = 'search'
+      const trackingCode = form.getAttribute('data-event-search-tracking-code')
+      const searchQuery = form.querySelector('input[name="query"]').value
+
+      // Include the search query in the event data
+      trackEvent(eventType, trackingCode, { query: searchQuery })
+    }
+  })
+
   trackPageView()
   window.addEventListener('beforeunload', updatepagetime)
 })()
