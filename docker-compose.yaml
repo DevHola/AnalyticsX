@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  mongodb:
+    image: mongo:4.4
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=adminUser
+      - MONGO_INITDB_ROOT_PASSWORD=adminPassword
+  
+  nodeapp:
+    build: .
+    container_name: nodeapp
+    restart: always
+    ports:
+      - "7000:7000"
+    environment:
+      - mongouri=mongodb://adminUser:adminPassword@mongodb:27017/ana
+      - PORT=7000
+      - KEY=[&U[+9a!7[fNLySK2$343Z@&KSh$/)r3W6X%d8w/%XvFU=9{sw+t)jg#~H~#;+>^bw<[*/<a:5]X[ZE{crfq.[fb4K"WN5u$h#]g
+    depends_on:
+      - mongodb
+    
+volumes:
+  mongodb:

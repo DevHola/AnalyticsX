@@ -1,0 +1,37 @@
+const express = require('express')
+const router = express.Router()
+const usercontroller = require('../controller/user')
+const sitecontroller = require('../controller/site')
+const Pagviewcontroller = require('../controller/pageview')
+const Pagedetailscontroller = require('../controller/pagedetails')
+const Event = require('../controller/events')
+const Eventdetail = require('../controller/eventDetails')
+const jwt = require('../utils/jwt')
+router.post('/register', usercontroller.register)
+router.post('/login', usercontroller.login)
+router.get('/auth/user', jwt.verify, usercontroller.user)
+
+router.post('/addsite', jwt.verify, sitecontroller.siteadd)
+router.get('/verification/:id', jwt.verify, sitecontroller.verificationkeyfile)
+router.get('/verify/ownership', jwt.verify, sitecontroller.ownerverification)
+router.get('/site/:id', sitecontroller.site)
+router.put('/site/tcu/:id', jwt.verify, sitecontroller.regenerateTC)
+router.get('/allsites', sitecontroller.allsites)
+router.get('/user/sites', jwt.verify, sitecontroller.usersites)
+
+router.post('/Pageview/Track', Pagviewcontroller.Track)
+router.get('/Pageview/site/:id', Pagviewcontroller.wipv)
+router.get('/Pageview/sid/:id', Pagviewcontroller.pvvsid)
+router.get('/Pageview/checksid/:id', Pagviewcontroller.cvsid)
+
+router.post('/Pagedetail/Track', Pagedetailscontroller.createpage)
+router.get('/Pagedetail/checkpsp/:id/:is/:it', Pagedetailscontroller.checkPSP)
+router.put('/Pagedetail/updateping/', Pagedetailscontroller.updatedetails)
+
+router.post('/event/new', Event.newEvent)
+router.get('/events/:id', Event.allSiteEvent)
+router.get('/event/:id', Event.singleEvent)
+
+router.post('/event/track', Eventdetail.NewTevent)
+router.get('/event/data/:id', Eventdetail.allEventTracking)
+module.exports = router
