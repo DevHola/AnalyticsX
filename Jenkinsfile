@@ -9,8 +9,8 @@ pipeline {
 
     stage('node version') {
       steps {
-        sh 'node --version'
         tool(name: 'nodejs', type: 'NodeJS')
+        sh 'node --version'
       }
     }
 
