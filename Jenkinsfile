@@ -15,7 +15,7 @@ pipeline {
     }
     stage('docker version') {
       steps {
-        sh 'docker --version'
+        sh 'docker compose -f docker-compose.yaml up -d'
       }
     }
 
