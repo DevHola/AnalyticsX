@@ -18,6 +18,9 @@ pipeline {
         sh 'docker compose -f docker-compose.yaml up -d'
       }
     }
-
+post {
+    always {
+      sh 'docker-compose -f docker-compose.yaml down'
+    }
   }
 }
