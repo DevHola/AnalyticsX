@@ -18,6 +18,11 @@ pipeline {
         sh 'docker compose -f docker-compose.yaml up -d'
       }
     }
+    stage('run app'){
+      steps{
+        sh 'npm start'
+      }
+    }
 }
   post {
     always {
