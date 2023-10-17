@@ -8,7 +8,7 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=adminUser
       - MONGO_INITDB_ROOT_PASSWORD=adminPassword
   
-  nodeapp:
+  nodeappv1:
     build: .
     container_name: nodeapp
     restart: always
