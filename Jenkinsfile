@@ -8,19 +8,9 @@ pipeline {
       }
     }
 
-    stage('node version') {
-      steps {
-        sh 'node --version'
-      }
-    }
-    stage('docker version') {
+    stage('Run Dockerized Application') {
       steps {
         sh 'docker compose -f docker-compose.yaml up -d'
-      }
-    }
-    stage('run app'){
-      steps{
-        sh 'npm start'
       }
     }
 }
