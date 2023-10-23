@@ -1,6 +1,6 @@
 const Eventdetail = require('../models/eventdetails')
 const Event = require('../models/event')
-const NewTevent = async (req, res) => {
+const NewTevent = async (req, res, next) => {
   const findevent = await Event.findOne({ Tc: req.body.Tc })
   if (findevent) {
     try {
@@ -19,14 +19,12 @@ const NewTevent = async (req, res) => {
         message: 'pinged!!'
       })
     } catch (error) {
-      res.status(500).json({
-        message: error
-      })
+      next(error)
     }
   }
 }
 
-const allEventTracking = async (req, res) => {
+const allEventTracking = async (req, res, next) => {
   const findevent = await Event.findOne({ Tc: req.params.id })
   if (findevent) {
     try {
@@ -35,9 +33,7 @@ const allEventTracking = async (req, res) => {
         alltrackingdata
       )
     } catch (error) {
-      res.status(500).json({
-        message: error
-      })
+      next(error)
     }
   }
 }

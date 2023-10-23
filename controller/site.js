@@ -21,41 +21,55 @@ const siteadd = async (req, res, next) => {
         message: 'Site added'
       })
     } catch (error) {
-      res.status(500).json({
-        error: error.message
-      })
+      next(error)
     }
   }
 }
 const site = async (req, res, next) => {
-  const site = await SiteModel.findOne({ Site_Name: req.params.id })
-  if (!site) {
-    res.status(200).json({ message: 'Site does not exist' })
+  try {
+    const site = await SiteModel.findOne({ Site_Name: req.params.id })
+    if (!site) {
+      res.status(200).json({ message: 'Site does not exist' })
+    }
+    res.status(200).json({
+      data: site
+    })
+  } catch (error) {
+    next(error)
   }
-  res.status(200).json({
-    data: site
-  })
 }
 const regenerateTC = async (req, res, next) => {
-  const code = await crypto.randomBytes(50).toString('hex')
-  const site = await SiteModel.findOneAndUpdate({ Site_Name: req.params.id }, { Tracking_Code: code }, { new: true })
-  if (site) {
-    res.status(200).json({
-      message: 'tracking code updated'
-    })
+  try {
+    const code = await crypto.randomBytes(50).toString('hex')
+    const site = await SiteModel.findOneAndUpdate({ Site_Name: req.params.id }, { Tracking_Code: code }, { new: true })
+    if (site) {
+      res.status(200).json({
+        message: 'tracking code updated'
+      })
+    }
+  } catch (error) {
+    next(error)
   }
 }
 const usersites = async (req, res, next) => {
-  const sites = await SiteModel.find({ Owner: req.user.data._id })
-  res.status(200).json({
-    data: sites
-  })
+  try {
+    const sites = await SiteModel.find({ Owner: req.user.data._id })
+    res.status(200).json({
+      data: sites
+    })
+  } catch (error) {
+    next(error)
+  }
 }
 const allsites = async (req, res, next) => {
-  const allsites = await SiteModel.find()
-  res.status(200).json({
-    data: allsites
-  })
+  try {
+    const allsites = await SiteModel.find()
+    res.status(200).json({
+      data: allsites
+    })
+  } catch (error) {
+    next(error)
+  }
 }
 const verificationkeyfile = async (req, res, next) => {
   const apikey = req.params.id
@@ -83,9 +97,7 @@ const verificationkeyfile = async (req, res, next) => {
       }
     })
   } catch (error) {
-    res.status(500).json({
-      message: error.message
-    })
+    next(error)
   }
 }
 
@@ -112,9 +124,7 @@ const ownerverification = async (req, res, next) => {
       })
     }
   } catch (error) {
-    res.status(500).json({
-      message: error.message
-    })
+    next(error)
   }
 }
 module.exports = {

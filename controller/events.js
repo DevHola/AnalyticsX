@@ -1,6 +1,6 @@
 const Event = require('../models/event')
 const crypto = require('crypto')
-const newEvent = async (req, res) => {
+const newEvent = async (req, res, next) => {
   try {
     const code = await crypto.randomBytes(50).toString('hex')
     const createEvent = await Event({
@@ -14,13 +14,11 @@ const newEvent = async (req, res) => {
       message: 'Trackable Event Created'
     })
   } catch (error) {
-    res.status(500).json({
-      message: error.message
-    })
+    next(error)
   }
 }
 
-const allSiteEvent = async (req, res) => {
+const allSiteEvent = async (req, res, next) => {
   try {
     const events = await Event.find({ siteId: req.params.id })
     if (events) {
@@ -29,27 +27,33 @@ const allSiteEvent = async (req, res) => {
       })
     }
   } catch (error) {
-    res.status(500).json({
-      message: error.message
-    })
+    next(error)
   }
 }
 
-const singleEvent = async (req, res) => {
-  const event = await Event.findOne({ _id: req.params.id }).populate('eventDetails').exec()
-  if (event) {
-    res.status(200).json(
-      event
-    )
+const singleEvent = async (req, res, next) => {
+  try {
+    const event = await Event.findOne({ _id: req.params.id }).populate('eventDetails').exec()
+    if (event) {
+      res.status(200).json(
+        event
+      )
+    }
+  } catch (error) {
+    next(error)
   }
 }
 
-const eventNameChange = async (req, res) => {
-  const update = await Event.findByIdAndUpdate(req.body.id, { $set: { eventName: req.body.name } }, { new: true })
-  if (update) {
-    res.status(200).json({
-      message: 'Event Name Updated'
-    })
+const eventNameChange = async (req, res, next) => {
+  try {
+    const update = await Event.findByIdAndUpdate(req.body.id, { $set: { eventName: req.body.name } }, { new: true })
+    if (update) {
+      res.status(200).json({
+        message: 'Event Name Updated'
+      })
+    }
+  } catch (error) {
+    next(error)
   }
 }
 module.exports = {

@@ -1,6 +1,6 @@
 const PageViewModel = require('../models/pageview')
 
-const Track = async (req, res) => {
+const Track = async (req, res, next) => {
   console.log(req.body)
   try {
     const Payview = await PageViewModel({
@@ -21,50 +21,59 @@ const Track = async (req, res) => {
       deviceType: req.body.deviceType,
       operatingSystem: req.body.operatingSystem
     })
-    console.log(Payview)
+    // console.log(Payview)
     await Payview.save()
     res.status(200).json({
       message: 'Pinged',
       data: Payview
     })
   } catch (error) {
-    res.status(500).json({
-      message: 'Error Occured',
-      error: error.message
-    })
+    next(error)
   }
 }
 
-const wipv = async (req, res) => {
-  const Pageview = await PageViewModel.find({ siteId: req.params.id })
-  if (Pageview) {
-    res.status(200).json({
-      message: 'Data Grabbed',
-      Data: Pageview
-    })
+const wipv = async (req, res, next) => {
+  try {
+    const Pageview = await PageViewModel.find({ siteId: req.params.id })
+    if (Pageview) {
+      res.status(200).json({
+        message: 'Data Grabbed',
+        Data: Pageview
+      })
+    }
+  } catch (error) {
+    next(error)
   }
 }
 
-const pvvsid = async (req, res) => {
-  const Pageview = await PageViewModel.findOne({ sessionId: req.params.id })
-  if (Pageview) {
-    res.status(200).json({
-      message: 'Data Grabbed',
-      data: Pageview
-    })
+const pvvsid = async (req, res, next) => {
+  try {
+    const Pageview = await PageViewModel.findOne({ sessionId: req.params.id })
+    if (Pageview) {
+      res.status(200).json({
+        message: 'Data Grabbed',
+        data: Pageview
+      })
+    }
+  } catch (error) {
+    next(error)
   }
 }
 
-const cvsid = async (req, res) => {
-  const Pageview = await PageViewModel.findOne({ sessionId: req.params.id })
-  if (Pageview) {
-    res.status(200).json({
-      message: 'Exist'
-    })
-  } else {
-    res.status(200).json({
-      message: 'No-Exist'
-    })
+const cvsid = async (req, res, next) => {
+  try {
+    const Pageview = await PageViewModel.findOne({ sessionId: req.params.id })
+    if (Pageview) {
+      res.status(200).json({
+        message: 'Exist'
+      })
+    } else {
+      res.status(200).json({
+        message: 'No-Exist'
+      })
+    }
+  } catch (error) {
+    next(error)
   }
 }
 module.exports = {

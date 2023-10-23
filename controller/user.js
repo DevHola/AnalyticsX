@@ -1,7 +1,7 @@
 const Usermodel = require('../models/user')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const register = async (req, res) => {
+const register = async (req, res, next) => {
   if (req.body.email !== '' && req.body.password !== '' && req.body.username !== '') {
     try {
       const User = await Usermodel.findOne({ Email: req.body.email })
@@ -22,14 +22,12 @@ const register = async (req, res) => {
         })
       })
     } catch (error) {
-      res.status(500).json({
-        error: error.message
-      })
+      next(error)
     }
   }
 }
 
-const login = async (req, res) => {
+const login = async (req, res, next) => {
   if (req.body.email !== '' && req.body.password !== '') {
     try {
       const user = await Usermodel.findOne({ Email: req.body.email })
@@ -52,25 +50,27 @@ const login = async (req, res) => {
         })
       }
     } catch (error) {
-      res.status(500).json({
-        message: error.message
-      })
+      next(error)
     }
   }
 }
 
-const logout = async (req, res) => {
+const logout = async (req, res, next) => {
 
 }
 
 const user = async (req, res, next) => {
-  const user = await Usermodel.findOne({ Email: req.user.data.email }).select('-Password').exec()
-  if (!user) {
-    res.status(200).json({ message: 'Invalid User' })
+  try {
+    const user = await Usermodel.findOne({ Email: req.user.data.email }).select('-Password').exec()
+    if (!user) {
+      res.status(200).json({ message: 'Invalid User' })
+    }
+    res.status(200).json({
+      User: user
+    })
+  } catch (error) {
+    next(error)
   }
-  res.status(200).json({
-    User: user
-  })
 }
 module.exports = {
   register, login, logout, user

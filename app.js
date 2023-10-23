@@ -12,6 +12,12 @@ app.use(morgan('combined'))
 
 const routes = require('./routes/routes')
 app.use('/api', routes)
+app.use((error, req, res, next) => {
+  console.log(error)
+  res.status(500).json({
+    message: 'Something went wrong'
+  })
+})
 const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Analytics Engine v1.0 ${PORT}`)
