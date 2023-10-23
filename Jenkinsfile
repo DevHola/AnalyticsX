@@ -1,5 +1,10 @@
 pipeline {
-  agent any
+  agent {
+  docker {
+    image 'docker:dind'
+    args '-it --user root --privileged --name stable-dind -v /var/run/docker.sock:/var/run/docker.sock'
+  }
+}
   tools {nodejs "NodeJS"}
   stages {
     stage('Checkout code') {
