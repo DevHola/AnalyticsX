@@ -40,5 +40,5 @@ const allEventTracking = async (req, res, next) => {
 module.exports = {
   NewTevent, allEventTracking
 }
-// TODO:work on the tracking module to implement the user interaction.
+// TODO: now work on the tracking module to implement the user interaction.
 // TODO:test the user module
