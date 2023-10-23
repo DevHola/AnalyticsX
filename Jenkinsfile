@@ -7,12 +7,6 @@ pipeline {
         git(url: 'https://github.com/DevHola/AnalyticsX', branch: 'Development')
       }
     }
-
-    stage('root user') {
-      steps {
-        sh 'newgrp docker'
-      }
-    }
     
     stage('Run Dockerized Application') {
       steps {
