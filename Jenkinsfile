@@ -8,6 +8,12 @@ pipeline {
       }
     }
 
+    stage('root user') {
+      steps {
+        sh 'newgrp docker'
+      }
+    }
+    
     stage('Run Dockerized Application') {
       steps {
         sh 'docker compose -f docker-compose.yaml up -d'
