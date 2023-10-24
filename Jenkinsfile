@@ -1,11 +1,6 @@
 pipeline {
-  agent {
-  docker {
-    image 'docker:dind'
-    args '-it --user root --privileged --name stable-dind -v /var/run/docker.sock:/var/run/docker.sock'
-  }
-}
-  tools {nodejs "NodeJS"}
+  agent any
+  tools {nodejs "nodejs"}
   stages {
     stage('Checkout code') {
       steps {
@@ -16,6 +11,11 @@ pipeline {
     stage('Run Dockerized Application') {
       steps {
         sh 'docker compose -f docker-compose.yaml up -d'
+      }
+    }
+    stage("Integration Test"){
+      steps {
+        sh 'npm test'
       }
     }
 }
