@@ -35,7 +35,7 @@ pipeline {
             steps {
                 script {
                     // Run the commands in the 'nodeapp' container
-                    sh "docker exec -it nodeapp sh -c 'nslookup mongodb'"
+                    sh "docker exec nodeapp sh -c 'nslookup mongodb'"
                 }
             }
         }
