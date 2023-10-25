@@ -20,16 +20,15 @@ pipeline {
     }
 
     stage('test app url'){
-      steps{
-        script{
-           def serviceURL = "http://localhost:7000/"
-            def response = sh(script: "curl -s --head ${serviceURL}", returnStatus: true, returnStdout: true)
-            echo "Response from ${serviceURL}:"
-            echo response
-
-        }
+    steps{
+      script{
+        def serviceURL = "http://localhost:7000/"
+          def response = sh(script: "curl -s --head ${serviceURL}", returnStatus: true, returnStdout: true).trim()
+          echo "Response from ${serviceURL}: ${response}"
       }
     }
+}
+
 
     stage("Integration Test"){
       steps {
