@@ -4,6 +4,7 @@ const crypto = require('crypto')
 let token;
 let decoded;
 let apikey;
+let siteidd;
 describe('user registration', () => {
   it('New user should be created - status ->200', async () => {
     const response = await request(baseurl).post('/register').send({
@@ -60,6 +61,7 @@ describe('Create ownable(site)', () => {
 describe('Get ownable(site)', () => {
   it('get ownable data by Name - statusCode -> 200', async () => {
     const response = await request(baseurl).get('/site/my_website').set('auth-access-token', `${token}`);
+    siteidd = response.body.data._id
     expect(response.body).toHaveProperty('data')
     expect(response.statusCode).toBe(200)
   })
@@ -75,7 +77,7 @@ describe('Get users specific Ownables', () => {
   it('Get ownables by user - statuscode - 200 expected', async () => {
     const response = await request(baseurl).get('/user/sites').set('auth-access-token', `${token}`)
     expect(response.body).toHaveProperty('data');
-    apikey = response.body.data[0]
+    apikey = response.body.data[0];
     //  console.log(response.body.data[0]._id)
     expect(response.statusCode).toBe(200)
   })
@@ -94,6 +96,25 @@ describe('Get all Ownables', () => {
     expect(response.statusCode).toBe(200)
   })
 }) 
+
+describe('create new trackable', () => {
+  it('new trackable custom - statusCode -200 expected', async () => {
+    const response = await request(baseurl).post('/event/new').send({
+      siteId: siteidd,
+      eventName: 'sign up event',
+      eventType: 'form-submittion'
+    })
+    expect(response.statusCode).toBe(200)
+    expect(response.body).toHaveProperty('message')
+  })
+})
+describe('get all custom events', () => {
+  it('Get all custom trackable event  - statuscode - 200 expected', async () => {
+    const response = await request(baseurl).get(`/events/${siteidd}`).set('auth-access-token', `${token}`)
+    expect(response.statusCode).toBe(200)
+  })
+}) 
+
 /* describe('Verification ping', () => {
   it('Ping user site to retreive ver-file details - statuscode - 200 expected', async () => {
     const response = await request(baseurl).get(`/verify/ownership?url=https://susafrica.com/`).set('auth-access-token', `${token}`)

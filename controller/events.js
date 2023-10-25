@@ -7,7 +7,7 @@ const newEvent = async (req, res, next) => {
       siteId: req.body.siteId,
       eventName: req.body.eventName,
       eventType: req.body.eventType,
-      tc: code
+      Tc: code
     })
     await createEvent.save()
     res.status(200).json({

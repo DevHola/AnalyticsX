@@ -29,8 +29,8 @@ router.get('/Pagedetail/checkpsp/:id/:is/:it', Pagedetailscontroller.checkPSP)
 router.put('/Pagedetail/updateping/', Pagedetailscontroller.updatedetails)
 
 router.post('/event/new', Event.newEvent)
-router.get('/events/:id', Event.allSiteEvent)
-router.get('/event/:id', Event.singleEvent)
+router.get('/events/:id', jwt.verify, Event.allSiteEvent)
+router.get('/event/:id', jwt.verify, Event.singleEvent)
 
 router.post('/event/track', Eventdetail.NewTevent)
 router.get('/event/data/:id', Eventdetail.allEventTracking)
