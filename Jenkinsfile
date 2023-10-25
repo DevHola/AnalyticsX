@@ -25,11 +25,17 @@ pipeline {
     }
 }
 
-
+    stage('Delay Before Integration Test') {
+        steps {
+            script {
+                sleep time: 60, unit: 'SECONDS'
+            }
+        }
+    }
 
     stage("Integration Test"){
       steps {
-        sh 'docker compose exec analyticsx /bin/sh'
+        sh 'npm test'
       }
     }
 }
