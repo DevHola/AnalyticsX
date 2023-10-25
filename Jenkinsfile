@@ -24,13 +24,6 @@ pipeline {
         sh 'docker ps -a'
     }
 }
-
-    
-    stage("Integration Test"){
-      steps {
-        sh 'docker logs nodeapp'
-      }
-    }
      stage('Docker Container Debug') {
             steps {
                 script {
@@ -39,7 +32,7 @@ pipeline {
                 }
             }
         }
-             stage('Docker Container Debug') {
+             stage('test') {
             steps {
                 script {
                     // Run the commands in the 'nodeapp' container
