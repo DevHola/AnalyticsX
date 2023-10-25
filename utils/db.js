@@ -5,7 +5,7 @@ const connection = () => {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     family: 4,
-    authSource: 'ana'
+    authSource: 'admin'
     // mongodb://adminUser:adminPassword@localhost:27017/?authMechanism=DEFAULT&authSource=ana
   }).then(() => {
     console.log('Connection Established')
