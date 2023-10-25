@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const connection = () => {
-  mongoose.connect(process.env.mongouri, {
+  mongoose.connect('mongodb://adminUser:adminPassword@localhost:27017/?authMechanism=DEFAULT&authSource=ana', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     family: 4
