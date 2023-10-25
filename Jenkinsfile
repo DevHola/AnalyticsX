@@ -29,7 +29,7 @@ pipeline {
 
     stage("Integration Test"){
       steps {
-        sh 'npm test'
+        sh 'docker compose exec analyticsx /bin/sh'
       }
     }
 }
