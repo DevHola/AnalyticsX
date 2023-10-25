@@ -19,15 +19,22 @@ pipeline {
       }
     }
 
-    stage('test app url'){
-    steps{
-      script{
-        def serviceURL = "http://localhost:7000/"
-          def response = sh(script: "curl -s --head ${serviceURL}", returnStatus: true, returnStdout: true).trim()
-          echo "Response from ${serviceURL}: ${response}"
-      }
+    stage('test app url') {
+    steps {
+        script {
+            def serviceURL = "http://localhost:7000/"
+            def response = sh(script: "curl -s --head ${serviceURL}", returnStatus: true, returnStdout: true)
+            
+            // Check if the response is an integer (exit code)
+            if (response instanceof Integer) {
+                echo "Response from ${serviceURL} (Exit Code): ${response}"
+            } else {
+                echo "Response from ${serviceURL}: ${response}"
+            }
+        }
     }
 }
+
 
 
     stage("Integration Test"){
