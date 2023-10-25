@@ -39,6 +39,14 @@ pipeline {
                 }
             }
         }
+             stage('Docker Container Debug') {
+            steps {
+                script {
+                    // Run the commands in the 'nodeapp' container
+                    sh "npm test"
+                }
+            }
+        }
 }
   post {
     always {
