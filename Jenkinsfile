@@ -28,9 +28,17 @@ pipeline {
     
     stage("Integration Test"){
       steps {
-        sh 'npm start'
+        sh 'docker logs nodeapp'
       }
     }
+     stage('Docker Container Debug') {
+            steps {
+                script {
+                    // Run the commands in the 'nodeapp' container
+                    sh "docker exec -it nodeapp sh -c 'nslookup mongodb'"
+                }
+            }
+        }
 }
   post {
     always {
