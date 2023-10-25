@@ -36,7 +36,7 @@ pipeline {
             steps {
                 script {
                     // Run the commands in the 'nodeapp' container
-                    sh "npm test"
+                    sh "npm start"
                 }
             }
         }
