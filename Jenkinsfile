@@ -25,14 +25,7 @@ pipeline {
     }
 }
 
-    stage('Delay Before Integration Test') {
-        steps {
-            script {
-                sleep time: 60, unit: 'SECONDS'
-            }
-        }
-    }
-
+    
     stage("Integration Test"){
       steps {
         sh 'npm start'
