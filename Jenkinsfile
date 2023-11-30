@@ -36,7 +36,7 @@ pipeline {
             steps {
                 script {
                     // Run the commands in the 'nodeapp' container
-                    sh "docker logs nodeapp"
+                    sh "docker logs mongodb"
                 }
             }
         }
