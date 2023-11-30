@@ -32,6 +32,14 @@ pipeline {
                 }
             }
         }
+         stage('mtest') {
+            steps {
+                script {
+                    // Run the commands in the 'nodeapp' container
+                    sh "docker logs nodeapp"
+                }
+            }
+        }
              stage('test') {
             steps {
                 script {
