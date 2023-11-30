@@ -19,25 +19,6 @@ pipeline {
                 sh 'docker compose -f docker-compose.yaml up -d'
             }
         }
-        stage('test app url') {
-            steps {
-                sh 'docker ps -a'
-            }
-        }
-        stage('Docker Container Debug') {
-            steps {
-                script {
-                    sh "docker exec nodeapp sh -c 'nslookup mongodb'"
-                }
-            }
-        }
-        stage('mtest') {
-            steps {
-                script {
-                    sh "docker logs mongodb"
-                }
-            }
-        }
          stage('Delay Before Last Step') {
             steps {
                 script {
@@ -46,7 +27,7 @@ pipeline {
                 }
             }
         }
-        stage('test') {
+        stage('Run App & log result') {
             steps {
                 script {
                         // Run the commands in the 'nodeapp' container
