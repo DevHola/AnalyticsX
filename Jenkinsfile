@@ -38,6 +38,14 @@ pipeline {
                 }
             }
         }
+         stage('Delay Before Last Step') {
+            steps {
+                script {
+                    echo "Waiting for 30 seconds..."
+                    sleep 60
+                }
+            }
+        }
         stage('test') {
             steps {
                 script {
@@ -46,30 +54,7 @@ pipeline {
                 }
             }
         }
-        stage('test1') {
-            steps {
-                script {
-                        // Run the commands in the 'nodeapp' container
-                        sh "docker logs nodeapp"
-                }
-            }
-        }
-        stage('test2') {
-            steps {
-                script {
-                        // Run the commands in the 'nodeapp' container
-                        sh "docker logs nodeapp"
-                }
-            }
-        }
-        stage('test3') {
-            steps {
-                script {
-                        // Run the commands in the 'nodeapp' container
-                        sh "docker logs nodeapp"
-                }
-            }
-        }
+        
     }
     post {
         always {
